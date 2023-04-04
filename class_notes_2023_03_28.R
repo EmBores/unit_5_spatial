@@ -144,6 +144,9 @@ stack_df %>%
   group_by(trophic_index) %>%
   summarize (mean_bath_m= mean(bath_m))
 
+
+##2023-04-04
+
 library(sf)
 
 USA_crit_hab=st_read(dsn="data/North_Atlantic_Right_Whale_Critical_Habitat/",
@@ -168,3 +171,30 @@ USA_crit_hab_sf= USA_crit_hab_sf %>%
   dplyr::select(country, habitat, geometry)
 
 crit_hab= rbind(USA_crit_hab_sf, CAN_crit_hab_sf)
+
+head(crit_hab)
+
+carcass=read.csv("data/RW_carcasses_2017.csv")
+head(carcass)
+
+lon_bounds=c(-72, -53)
+lat_bounds=c(39, 53)
+
+world_map=map_data("worldHires", ylim=lat_bounds, xlim=lon_bounds)
+head(world_map)
+head(crit_hab)
+head(carcass)
+
+crit_map= ggplot()+
+  geom_polygon(data=world_map, aes(x=long, y=lat, group=group), fill="black")+
+  geom_sf(data=crit_hab, aes(fill=country))+ 
+  geom_point(data=carcass, aes(x=Longitude, y=Latitude, color=Carcass_position))+
+  coord_sf(1.3, xlim=lon_bounds, ylim=lat_bounds)+
+  theme_bw()
+
+
+
+
+
+
+
